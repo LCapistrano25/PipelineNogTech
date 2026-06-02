@@ -8,4 +8,5 @@ dependencies = [
     "luigi>=3.8.1",
     "numpy>=2.4.6",
     "pandas>=3.0.3",
+    "requests>=2.34.2",
 ]
