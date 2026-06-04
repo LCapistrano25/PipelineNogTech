@@ -1,0 +1,39 @@
+import pandas as pd
+from datetime import datetime
+from typing import Optional
+
+FORMATS = [
+    '%Y%m%d',
+    '%Y-%m-%d',
+    '%d/%m/%Y',
+    '%d-%m-%Y',
+    '%Y-%m'
+]
+
+def parse_date(value: any) -> Optional[datetime]:
+    """
+    Tenta converter uma string ou valor em um objeto datetime baseado em múltiplos formatos.
+    
+    Args:
+        value: Valor da data.
+        
+    Returns:
+        Objeto datetime ou None se não for possível converter.
+    """
+    if pd.isna(value):
+        return None
+
+    value_str = str(value).strip()
+
+    for fmt in FORMATS:
+        try:
+            return datetime.strptime(value_str, fmt)
+        except ValueError:
+            continue
+    
+    # Se nenhum formato funcionar, tenta o pd.to_datetime como fallback
+    try:
+        dt = pd.to_datetime(value_str)
+        return dt.to_pydatetime() if hasattr(dt, 'to_pydatetime') else dt
+    except:
+        return None

@@ -1,0 +1,43 @@
+import json
+import os
+import logging
+from typing import Dict, Any, Optional
+
+logger = logging.getLogger(__name__)
+
+class AddressCache:
+    """
+    Sistema de cache persistente para endereços consultados via CEP.
+    Evita chamadas desnecessárias à API e economiza recursos.
+    """
+    def __init__(self, cache_file: str = "databases/cep_cache.json"):
+        self.cache_file = cache_file
+        self.cache: Dict[str, Any] = self._load_cache()
+
+    def _load_cache(self) -> Dict[str, Any]:
+        """Carrega o cache do arquivo JSON se existir."""
+        if os.path.exists(self.cache_file):
+            try:
+                with open(self.cache_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.error(f"Erro ao carregar cache de CEP: {e}")
+        return {}
+
+    def _save_cache(self) -> None:
+        """Salva o estado atual do cache no arquivo JSON."""
+        try:
+            os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
+            with open(self.cache_file, 'w', encoding='utf-8') as f:
+                json.dump(self.cache, f, indent=4, ensure_ascii=False)
+        except Exception as e:
+            logger.error(f"Erro ao salvar cache de CEP: {e}")
+
+    def get(self, cep: str) -> Optional[Dict[str, Any]]:
+        """Busca um endereço no cache pelo CEP."""
+        return self.cache.get(cep)
+
+    def set(self, cep: str, address_data: Dict[str, Any]) -> None:
+        """Adiciona um endereço ao cache e persiste no disco."""
+        self.cache[cep] = address_data
+        self._save_cache()
