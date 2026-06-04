@@ -3,13 +3,12 @@ from typing import Optional
 
 import requests
 
-from infrastructure.services.cep.icep_service import ICepService
 from shared.responses.response_cep import CepResponse
 
 # Configuração básica de logging
 logger = logging.getLogger(__name__)
 
-class BrasilAPICepService(ICepService):
+class BrasilAPICepService:
     """
     Serviço para interação com a BrasilAPI para consulta de CEP.
     """

@@ -1,6 +1,8 @@
 import logging
 from typing import Any, Dict, List, Set
 
+import pandas as pd
+
 from config import settings
 from infrastructure.cache.address_cache import AddressCache
 from infrastructure.services.cep.brasil_api_cep_service import BrasilAPICepService
@@ -54,3 +56,27 @@ class CepEnrichmentService:
 
         logger.info(f"Enriquecimento de CEP concluído. Cache Hits: {cached_hits}, Novas Consultas: {new_queries}")
         return address_map
+
+    def enrich_dataframe(self, df: pd.DataFrame, cep_column: str) -> pd.DataFrame:
+        """
+        Enriquece um DataFrame com informações de endereço baseadas em uma coluna de CEP.
+        
+        Args:
+            df: DataFrame a ser enriquecido.
+            cep_column: Nome da coluna contendo os CEPs.
+            
+        Returns:
+            DataFrame com as novas colunas 'bairro', 'cidade' e 'estado'.
+        """
+        if cep_column not in df.columns:
+            logger.error(f"Coluna '{cep_column}' não encontrada no DataFrame.")
+            return df
+
+        unique_ceps = df[cep_column].dropna().unique()
+        address_map = self.enrich_ceps(unique_ceps)
+
+        temp_df = df.copy()
+        for col in ['bairro', 'cidade', 'estado']:
+            temp_df[col] = temp_df[cep_column].astype(str).map(lambda x: address_map.get(x, {}).get(col))
+
+        return temp_df

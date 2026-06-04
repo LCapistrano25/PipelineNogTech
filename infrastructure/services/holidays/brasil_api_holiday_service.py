@@ -3,13 +3,12 @@ from typing import Optional
 
 import requests
 
-from infrastructure.services.holidays.iholiday_service import IHolidayService
 from shared.responses.response_holiday import HolidayResponse
 
 # Configuração básica de logging
 logger = logging.getLogger(__name__)
 
-class BrasilAPIHolidayService(IHolidayService):
+class BrasilAPIHolidayService:
     """
     Serviço para interação com a BrasilAPI para consulta de feriados.
     """

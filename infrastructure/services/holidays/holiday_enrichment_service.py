@@ -1,6 +1,8 @@
 import logging
 from typing import Any, Dict, List, Set
 
+import pandas as pd
+
 from config import settings
 from infrastructure.cache.holiday_cache import HolidayCache
 from infrastructure.services.holidays.brasil_api_holiday_service import (
@@ -32,7 +34,7 @@ class HolidayEnrichmentService:
         holiday_dates_by_year: Dict[str, List[str]] = {}
         
         # Garantir anos únicos e formatados como string
-        unique_years: Set[str] = {str(int(year)) for year in years if year is not None and not isinstance(year, str) or (isinstance(year, str) and year.isdigit())}
+        unique_years: Set[str] = {str(int(year)) for year in years if year is not None and (not isinstance(year, str) or year.isdigit())}
 
         for year_str in unique_years:
             cached_holidays = self.cache.get(year_str)
@@ -56,3 +58,40 @@ class HolidayEnrichmentService:
                     holiday_dates_by_year[year_str] = []
 
         return holiday_dates_by_year
+
+    def enrich_dataframe(self, df: pd.DataFrame, date_column: str) -> pd.DataFrame:
+        """
+        Enriquece um DataFrame com a informação se a data em uma coluna é feriado.
+        
+        Args:
+            df: DataFrame a ser enriquecido.
+            date_column: Nome da coluna contendo as datas (deve ser datetime).
+            
+        Returns:
+            DataFrame com a nova coluna 'venda_em_feriado'.
+        """
+        if date_column not in df.columns:
+            logger.error(f"Coluna '{date_column}' não encontrada no DataFrame.")
+            return df
+
+        # Garante que a coluna de data é datetime
+        temp_df = df.copy()
+        temp_df[date_column] = pd.to_datetime(temp_df[date_column])
+        
+        years = temp_df[date_column].dt.year.dropna().unique()
+        holiday_dates_by_year = self.get_holidays_by_year(years)
+
+        def check_is_holiday(row) -> bool:
+            if pd.isna(row[date_column]):
+                return False
+            
+            dt_str = row[date_column].strftime('%Y-%m-%d')
+            year_str = str(row[date_column].year)
+            
+            holidays = holiday_dates_by_year.get(year_str, [])
+            return dt_str in holidays
+
+        temp_df['venda_em_feriado'] = temp_df.apply(check_is_holiday, axis=1)
+        
+        logger.info(f"Enriquecimento de feriados concluído. {temp_df['venda_em_feriado'].sum()} transações em feriados.")
+        return temp_df

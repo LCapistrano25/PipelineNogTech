@@ -43,26 +43,8 @@ class EnrichTransactionsHolidayTask(luigi.Task):
                 save_df_to_parquet(df, self.output().path)
                 return
             
-            df['data_transacao'] = pd.to_datetime(df['data_transacao'])
-            years = df['data_transacao'].dt.year.dropna().unique()
-            
             enrichment_service = HolidayEnrichmentService()
-            holiday_dates_by_year = enrichment_service.get_holidays_by_year(years)
-
-            # 4. Cria a coluna indicadora de feriado
-            def check_is_holiday(row) -> bool:
-                if pd.isna(row['data_transacao']):
-                    return False
-                
-                dt_str = row['data_transacao'].strftime('%Y-%m-%d')
-                year_str = str(row['data_transacao'].year)
-                
-                holidays = holiday_dates_by_year.get(year_str, [])
-                return dt_str in holidays
-
-            df['venda_em_feriado'] = df.apply(check_is_holiday, axis=1)
-            
-            logger.info(f"Enriquecimento de feriados concluído. {df['venda_em_feriado'].sum()} transações em feriados.")
+            df = enrichment_service.enrich_dataframe(df, 'data_transacao')
 
             save_df_to_parquet(df, self.output().path)
         

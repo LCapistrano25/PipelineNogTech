@@ -33,16 +33,10 @@ class EnrichTransactionsAddressTask(luigi.Task):
                 save_df_to_parquet(df, self.output().path)
                 return
 
-            unique_ceps = df['cep_cobranca'].dropna().unique()
-            
             enrichment_service = CepEnrichmentService()
-            address_map = enrichment_service.enrich_ceps(unique_ceps)
+            df = enrichment_service.enrich_dataframe(df, 'cep_cobranca')
 
-            enriched_df = df.copy()
-            for col in ['bairro', 'cidade', 'estado']:
-                enriched_df[col] = enriched_df['cep_cobranca'].astype(str).map(lambda x: address_map.get(x, {}).get(col))
-
-            save_df_to_parquet(enriched_df, self.output().path)
+            save_df_to_parquet(df, self.output().path)
             
         except Exception as e:
             logger.error(f"Erro no enriquecimento de endereço: {e}")
