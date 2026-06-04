@@ -2,18 +2,18 @@ import logging
 import luigi
 import pandas as pd
 import os
+from config import settings
 from infrastructure.utils.format_cpf import format_cpf
 from infrastructure.utils.format_float import format_float
 from pipelines.extract.extract_engagement import ExtractEngagementTask
 
-# Configuração de logging
 logger = logging.getLogger(__name__)
 
 class TransformEngagementTask(luigi.Task):
     """
     Task para transformar os dados de engajamento dos alunos.
     """
-    output_path = luigi.Parameter(default='output/processed/engagement.parquet')
+    output_path = luigi.Parameter(default=settings.PROCESSED_ENGAGEMENT)
 
     def requires(self):
         return [ExtractEngagementTask()]
@@ -22,8 +22,12 @@ class TransformEngagementTask(luigi.Task):
         try:
             logger.info("Iniciando transformação de engajamento")
             
-            # Leitura do input (resultado da task anterior)
             engagement_df = pd.read_parquet(self.input()[0].path)
+
+            if engagement_df.empty:
+                logger.warning("DataFrame de engajamento está vazio. Pulando transformações.")
+                engagement_df.to_parquet(self.output().path, index=False)
+                return
 
             # Transformações de data
             engagement_df['mes_referencia'] = pd.to_datetime(engagement_df['mes_referencia'], format='%Y-%m')
@@ -35,13 +39,9 @@ class TransformEngagementTask(luigi.Task):
             engagement_df['nps_score'] = engagement_df['nps_score'].apply(format_float)
             engagement_df['cpf_aluno'] = engagement_df['cpf_aluno'].apply(format_cpf)
             
-            # Log de progresso
             logger.info(f"Transformados {len(engagement_df)} registros de engajamento.")
 
-            # Garantir diretório de saída
-            os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
-            
-            # Salvando o resultado processado
+            os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)
             engagement_df.to_parquet(self.output().path, index=False)
             logger.info(f"Dados transformados salvos em {self.output_path}")
             
@@ -50,4 +50,4 @@ class TransformEngagementTask(luigi.Task):
             raise e
 
     def output(self) -> luigi.LocalTarget:
-        return luigi.LocalTarget(self.output_path)
+        return luigi.LocalTarget(str(self.output_path))
