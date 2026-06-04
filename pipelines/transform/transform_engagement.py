@@ -5,6 +5,7 @@ import luigi
 import pandas as pd
 
 from config import settings
+from infrastructure.utils.file_utils import save_df_to_parquet
 from infrastructure.utils.format_cpf import format_cpf
 from infrastructure.utils.format_float import format_float
 from pipelines.extract.extract_engagement import ExtractEngagementTask
@@ -28,7 +29,7 @@ class TransformEngagementTask(luigi.Task):
 
             if engagement_df.empty:
                 logger.warning("DataFrame de engajamento está vazio. Pulando transformações.")
-                engagement_df.to_parquet(self.output().path, index=False)
+                save_df_to_parquet(engagement_df, self.output().path)
                 return
 
             # Transformações de data
@@ -43,9 +44,7 @@ class TransformEngagementTask(luigi.Task):
             
             logger.info(f"Transformados {len(engagement_df)} registros de engajamento.")
 
-            os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)
-            engagement_df.to_parquet(self.output().path, index=False)
-            logger.info(f"Dados transformados salvos em {self.output_path}")
+            save_df_to_parquet(engagement_df, self.output().path)
             
         except Exception as e:
             logger.error(f"Erro na transformação de engajamento: {e}")

@@ -5,6 +5,7 @@ import luigi
 import pandas as pd
 
 from config import settings
+from infrastructure.utils.file_utils import save_df_to_parquet
 from pipelines.transform.enrich_transactions_holiday import (
     EnrichTransactionsHolidayTask,
 )
@@ -51,7 +52,6 @@ class TransformEnrichedDataTask(luigi.Task):
                 how='left'
             )
 
-            # Validação pós-join
             if not final_df.empty:
                 logger.info(f"Join concluído. Dataset final com {len(final_df)} registros.")
                 matched_engagement = final_df['horas_assistidas'].notna().sum()
@@ -59,9 +59,7 @@ class TransformEnrichedDataTask(luigi.Task):
             else:
                 logger.warning("O join resultou em um dataset vazio.")
 
-            os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)
-            final_df.to_parquet(self.output().path, index=False)
-            logger.info(f"Dataset final consolidado salvo em {self.output_path}")
+            save_df_to_parquet(final_df, self.output().path)
             
         except Exception as e:
             logger.error(f"Erro no join final de dados: {e}")

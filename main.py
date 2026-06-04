@@ -3,6 +3,7 @@ import os
 
 import luigi
 
+from infrastructure.utils.file_utils import ensure_dir
 from pipelines.transform.transform_engagement_transactions import (
     TransformEnrichedDataTask,
 )
@@ -12,13 +13,14 @@ def setup_logging():
     Configura o logging estruturado para o projeto.
     """
     log_dir = "logs"
-    os.makedirs(log_dir, exist_ok=True)
+    log_file = os.path.join(log_dir, "pipeline.log")
+    ensure_dir(log_file)
     
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler(os.path.join(log_dir, "pipeline.log")),
+            logging.FileHandler(log_file),
             logging.StreamHandler()
         ]
     )

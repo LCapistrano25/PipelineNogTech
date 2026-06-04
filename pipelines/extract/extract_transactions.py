@@ -5,6 +5,7 @@ import luigi
 import pandas as pd
 
 from config import settings
+from infrastructure.utils.file_utils import save_df_to_parquet
 
 logger = logging.getLogger(__name__)
 
@@ -34,9 +35,7 @@ class ExtractTransactionsTask(luigi.Task):
             else:
                 logger.info(f"Extraídas {len(transactions_df)} transações.")
             
-            os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)
-            transactions_df.to_parquet(self.output().path, index=False)
-            logger.info(f"Dados salvos com sucesso em {self.output_path}")
+            save_df_to_parquet(transactions_df, self.output().path)
             
         except Exception as e:
             logger.error(f"Erro na extração de transações: {e}")

@@ -6,10 +6,10 @@ import luigi
 import pandas as pd
 
 from config import settings
-from infrastructure.cache.holiday_cache import HolidayCache
-from infrastructure.services.holidays.brasil_api_holiday_service import (
-    BrasilAPIHolidayService,
+from infrastructure.services.holidays.holiday_enrichment_service import (
+    HolidayEnrichmentService,
 )
+from infrastructure.utils.file_utils import save_df_to_parquet
 from pipelines.transform.enrich_transactions_address import (
     EnrichTransactionsAddressTask,
 )
@@ -35,45 +35,19 @@ class EnrichTransactionsHolidayTask(luigi.Task):
             
             if df.empty:
                 logger.warning("DataFrame de transações está vazio. Pulando enriquecimento de feriados.")
-                df.to_parquet(self.output().path, index=False)
+                save_df_to_parquet(df, self.output().path)
                 return
 
-            # Garante que a coluna de data é datetime
             if 'data_transacao' not in df.columns:
                 logger.error("Coluna 'data_transacao' não encontrada para verificar feriados.")
-                df.to_parquet(self.output().path, index=False)
+                save_df_to_parquet(df, self.output().path)
                 return
             
             df['data_transacao'] = pd.to_datetime(df['data_transacao'])
             years = df['data_transacao'].dt.year.dropna().unique()
-            logger.info(f"Anos encontrados na coluna 'data_transacao': {years}")
             
-            cache = HolidayCache(cache_file=settings.HOLIDAY_CACHE_PATH)
-            holiday_service = BrasilAPIHolidayService(timeout=settings.API_TIMEOUT)
-
-            # Mapa de feriados por ano: { "2024": [date1, date2, ...] }
-            holiday_dates_by_year: Dict[str, List[str]] = {}
-
-            for year in years:
-                year_str = str(int(year))
-                cached_holidays = cache.get(year_str)
-                
-                if cached_holidays:
-                    # Extrai apenas as datas dos feriados salvos no cache
-                    holiday_dates_by_year[year_str] = [h['date'] for h in cached_holidays]
-                else:
-                    logger.info(f"Consultando feriados para o ano {year_str}")
-                    holiday_list = holiday_service.get_holiday(year_str)
-                    
-                    if holiday_list:
-                        # Salva o objeto completo no cache para referência futura
-                        holiday_data = [h.model_dump() for h in holiday_list]
-                        cache.set(year_str, holiday_data)
-                        
-                        # Extrai apenas as datas para o processamento atual
-                        holiday_dates_by_year[year_str] = [h['date'] for h in holiday_data]
-                    else:
-                        holiday_dates_by_year[year_str] = []
+            enrichment_service = HolidayEnrichmentService()
+            holiday_dates_by_year = enrichment_service.get_holidays_by_year(years)
 
             # 4. Cria a coluna indicadora de feriado
             def check_is_holiday(row) -> bool:
@@ -90,9 +64,7 @@ class EnrichTransactionsHolidayTask(luigi.Task):
             
             logger.info(f"Enriquecimento de feriados concluído. {df['venda_em_feriado'].sum()} transações em feriados.")
 
-            os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)
-            df.to_parquet(self.output().path, index=False)
-            logger.info(f"Dados enriquecidos com feriados salvos em {self.output_path}")
+            save_df_to_parquet(df, self.output().path)
         
         except Exception as e:
             logger.error(f"Erro no enriquecimento de feriados: {e}")

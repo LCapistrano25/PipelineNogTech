@@ -4,6 +4,7 @@ import os
 from typing import Any, Dict, Optional
 
 from infrastructure.cache.icache import ICache
+from infrastructure.utils.file_utils import ensure_dir
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ class AddressCache(ICache):
     def _save_cache(self) -> None:
         """Salva o estado atual do cache no arquivo JSON."""
         try:
-            os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
+            ensure_dir(self.cache_file)
             with open(self.cache_file, 'w', encoding='utf-8') as f:
                 json.dump(self.cache, f, indent=4, ensure_ascii=False)
         except Exception as e:

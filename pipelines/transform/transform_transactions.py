@@ -5,6 +5,7 @@ import luigi
 import pandas as pd
 
 from config import settings
+from infrastructure.utils.file_utils import save_df_to_parquet
 from infrastructure.utils.format_cep import format_cep
 from infrastructure.utils.format_cpf import format_cpf
 from infrastructure.utils.format_date import parse_date
@@ -30,7 +31,7 @@ class TransformTransactionsTask(luigi.Task):
 
             if transactions_df.empty:
                 logger.warning("DataFrame de transações está vazio. Pulando transformações.")
-                transactions_df.to_parquet(self.output().path, index=False)
+                save_df_to_parquet(transactions_df, self.output().path)
                 return
 
             # Transformações de data
@@ -54,14 +55,11 @@ class TransformTransactionsTask(luigi.Task):
                 .to_dict()
             )
 
-            # Preenchimento de planos nulos
-            transactions_df['plano_adquirido'] = transactions_df['valor_brl'].apply(lambda x: map_plans.get(x, None))
-            
-            logger.info(f"Transformadas {len(transactions_df)} transações.")
+            # Preenche planos nulos baseado no valor
+            transactions_df['plano_adquirido'] = transactions_df['plano_adquirido'].fillna(transactions_df['valor_brl'].map(map_plans))
 
-            os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)
-            transactions_df.to_parquet(self.output().path, index=False)
-            logger.info(f"Dados transformados salvos em {self.output_path}")
+            logger.info(f"Transformadas {len(transactions_df)} transações.")
+            save_df_to_parquet(transactions_df, self.output().path)
             
         except Exception as e:
             logger.error(f"Erro na transformação de transações: {e}")
