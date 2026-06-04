@@ -1,7 +1,7 @@
 import re
-from typing import Optional
 import pandas as pd
 
+from typing import Optional
 
 def format_cep(cep: any) -> Optional[str]:
     """
@@ -23,10 +23,8 @@ def format_cep(cep: any) -> Optional[str]:
 
     digits = re.sub(r"\D", "", str(cep))
 
-    # Remove excedentes dígitos
     digits = digits[:8]
 
-    # CEP deve possuir exatamente 8 dígitos
     if len(digits) != 8:
         return None
 

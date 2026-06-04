@@ -11,7 +11,6 @@ def format_float(value) -> float:
 
     try:
         if isinstance(value, str):
-            # Remove pontos de milhar e troca vírgula decimal por ponto
             clean_value = value.replace('.', '').replace(',', '.')
             return float(clean_value)
         return float(value)

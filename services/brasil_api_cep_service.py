@@ -6,7 +6,7 @@ from domain.entities.response_cep import ResponseCep
 # Configuração básica de logging
 logger = logging.getLogger(__name__)
 
-class BrasilAPIService:
+class BrasilAPICepService:
     """
     Serviço para interação com a BrasilAPI para consulta de CEP.
     """

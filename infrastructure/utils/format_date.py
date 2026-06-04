@@ -31,7 +31,6 @@ def parse_date(value: any) -> Optional[datetime]:
         except ValueError:
             continue
     
-    # Se nenhum formato funcionar, tenta o pd.to_datetime como fallback
     try:
         dt = pd.to_datetime(value_str)
         return dt.to_pydatetime() if hasattr(dt, 'to_pydatetime') else dt

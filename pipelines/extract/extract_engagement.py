@@ -1,9 +1,7 @@
 import logging
 import luigi
 import pandas as pd
-from typing import Any
 
-# Configuração de logging
 logger = logging.getLogger(__name__)
 
 class ExtractEngagementTask(luigi.Task):
@@ -20,11 +18,12 @@ class ExtractEngagementTask(luigi.Task):
             # Extração
             engagement_df = pd.read_json(self.input_path)
             
-            # Log de progresso
+            # Log de progresso com número de registros extraídos
             logger.info(f"Extraídos {len(engagement_df)} registros.")
             
             # Garantir diretório de saída
             import os
+            
             os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
             
             # Salvando em Parquet (Carga inicial)

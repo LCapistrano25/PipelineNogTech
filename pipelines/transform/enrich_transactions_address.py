@@ -3,7 +3,7 @@ import luigi
 import pandas as pd
 import os
 from typing import Dict, Any
-from services.brasil_api_service import BrasilAPIService
+from services.brasil_api_cep_service import BrasilAPICepService
 from infrastructure.address_cache import AddressCache
 from pipelines.transform.transform_transactions import TransformTransactionsTask
 from infrastructure.utils.format_cep import format_cep
@@ -31,7 +31,7 @@ class EnrichTransactionsAddressTask(luigi.Task):
             unique_ceps = df['cep_cobranca'].dropna().unique()
             
             # Inicializa Serviços
-            api_service = BrasilAPIService()
+            api_service = BrasilAPICepService()
             cache = AddressCache()
             
             address_map: Dict[str, Dict[str, Any]] = {}
@@ -41,15 +41,16 @@ class EnrichTransactionsAddressTask(luigi.Task):
             for cep in unique_ceps:
                 # 1. Tenta buscar no Cache primeiro
                 cached_result = cache.get(cep)
+                print(cached_result)
                 
                 if cached_result:
                     address_map[cep] = cached_result
                     cached_hits += 1
                 else:
-                    #Format CEP using format_cep function before API query to ensure API compatibility
+
                     formatted_cep = format_cep(cep)
                     if not formatted_cep:
-                        continue  # Skip invalid CEP formats
+                        continue
                     
                     # 2. Se não estiver no cache, consulta a API
                     result = api_service.get_cep(formatted_cep)

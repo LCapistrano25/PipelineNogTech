@@ -1,16 +1,16 @@
-import json
 import os
+import json
 import logging
 from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 
-class AddressCache:
+class HolidayCache:
     """
-    Sistema de cache persistente para endereços consultados via CEP.
+    Sistema de cache persistente para feriados consultados via ano.
     Evita chamadas desnecessárias à API e economiza recursos.
     """
-    def __init__(self, cache_file: str = "databases/cep_cache.json"):
+    def __init__(self, cache_file: str = "databases/holiday_cache.json"):
         self.cache_file = cache_file
         self.cache: Dict[str, Any] = self._load_cache()
 
@@ -21,7 +21,7 @@ class AddressCache:
                 with open(self.cache_file, 'r', encoding='utf-8') as f:
                     return json.load(f)
             except Exception as e:
-                logger.error(f"Erro ao carregar cache de CEP: {e}")
+                logger.error(f"Erro ao carregar cache de feriados: {e}")
         return {}
 
     def _save_cache(self) -> None:
@@ -31,13 +31,13 @@ class AddressCache:
             with open(self.cache_file, 'w', encoding='utf-8') as f:
                 json.dump(self.cache, f, indent=4, ensure_ascii=False)
         except Exception as e:
-            logger.error(f"Erro ao salvar cache de CEP: {e}")
+            logger.error(f"Erro ao salvar cache de feriados: {e}")
 
-    def get(self, cep: str, default: Any = None) -> Optional[Dict[str, Any]]:
-        """Busca um endereço no cache pelo CEP."""
-        return self.cache.get(cep, default)
+    def get(self, year: str, default: Any = None) -> Optional[Dict[str, Any]]:
+        """Busca um feriados no cache pelo ano."""
+        return self.cache.get(year, default)
 
-    def set(self, cep: str, address_data: Dict[str, Any]) -> None:
-        """Adiciona um endereço ao cache e persiste no disco."""
-        self.cache[cep] = address_data
+    def set(self, year: str, holiday_data: Dict[str, Any]) -> None:
+        """Adiciona um feriados ao cache e persiste no disco."""
+        self.cache[year] = holiday_data
         self._save_cache()

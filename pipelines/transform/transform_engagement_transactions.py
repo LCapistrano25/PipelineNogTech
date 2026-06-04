@@ -2,7 +2,7 @@ import logging
 import luigi
 import pandas as pd
 import os
-from pipelines.transform.enrich_transactions_address import EnrichTransactionsAddressTask
+from pipelines.transform.enrich_transactions_holiday import EnrichTransactionsHolidayTask
 from pipelines.transform.transform_engagement import TransformEngagementTask
 
 # Configuração de logging
@@ -16,7 +16,7 @@ class TransformEnrichedDataTask(luigi.Task):
     output_path = luigi.Parameter(default="output/transformed/enriched_engagement_transactions.parquet")
 
     def requires(self):
-        return [EnrichTransactionsAddressTask(), TransformEngagementTask()]
+        return [EnrichTransactionsHolidayTask(), TransformEngagementTask()]
 
     def run(self) -> None:
         try:
