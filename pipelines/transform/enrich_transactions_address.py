@@ -1,11 +1,13 @@
 import logging
+import os
+from typing import Any, Dict
+
 import luigi
 import pandas as pd
-import os
-from typing import Dict, Any
+
 from config import settings
-from services.brasil_api_cep_service import BrasilAPICepService
-from infrastructure.address_cache import AddressCache
+from infrastructure.cache.address_cache import AddressCache
+from infrastructure.services.cep.brasil_api_cep_service import BrasilAPICepService
 from pipelines.transform.transform_transactions import TransformTransactionsTask
 
 logger = logging.getLogger(__name__)
@@ -50,10 +52,9 @@ class EnrichTransactionsAddressTask(luigi.Task):
                     result = api_service.get_cep(str(cep))
                     if result:
                         address_data = {
-                            'logradouro_cobranca': result.street,
-                            'bairro_cobranca': result.neighborhood,
-                            'cidade_cobranca': result.city,
-                            'estado_cobranca': result.state
+                            'bairro': result.neighborhood,
+                            'cidade': result.city,
+                            'estado': result.state
                         }
                         address_map[str(cep)] = address_data
                         cache.set(str(cep), address_data)
@@ -62,7 +63,7 @@ class EnrichTransactionsAddressTask(luigi.Task):
             logger.info(f"Enriquecimento concluído. Cache Hits: {cached_hits}, Novas Consultas: {new_queries}")
 
             enriched_df = df.copy()
-            for col in ['logradouro_cobranca', 'bairro_cobranca', 'cidade_cobranca', 'estado_cobranca']:
+            for col in ['bairro', 'cidade', 'estado']:
                 enriched_df[col] = enriched_df['cep_cobranca'].astype(str).map(lambda x: address_map.get(x, {}).get(col))
 
             os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)

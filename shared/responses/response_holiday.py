@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class ResponseHoliday(BaseModel):
+class HolidayResponse(BaseModel):
     date: str
     name: str
     type: str

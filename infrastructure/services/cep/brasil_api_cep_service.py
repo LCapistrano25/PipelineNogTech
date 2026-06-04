@@ -1,12 +1,15 @@
 import logging
-import requests
 from typing import Optional
-from domain.entities.response_cep import ResponseCep
+
+import requests
+
+from infrastructure.services.cep.icep_service import ICepService
+from shared.responses.response_cep import CepResponse
 
 # Configuração básica de logging
 logger = logging.getLogger(__name__)
 
-class BrasilAPICepService:
+class BrasilAPICepService(ICepService):
     """
     Serviço para interação com a BrasilAPI para consulta de CEP.
     """
@@ -15,15 +18,15 @@ class BrasilAPICepService:
     def __init__(self, timeout: int = 10):
         self.timeout = timeout
 
-    def get_cep(self, cep: str) -> Optional[ResponseCep]:
+    def get_cep(self, cep: str) -> Optional[CepResponse]:
         """
-        Consulta um CEP na BrasilAPI e retorna um objeto ResponseCep.
+        Consulta um CEP na BrasilAPI e retorna um objeto CepResponse.
         
         Args:
             cep: O CEP a ser consultado (apenas números ou formatado).
             
         Returns:
-            Um objeto ResponseCep ou None se ocorrer um erro.
+            Um objeto CepResponse ou None se ocorrer um erro.
         """
         url = f"{self.BASE_URL}{cep}"
         try:
@@ -33,7 +36,7 @@ class BrasilAPICepService:
             response.raise_for_status()
             
             data = response.json()
-            return ResponseCep(**data)
+            return CepResponse(**data)
             
         except requests.exceptions.HTTPError as e:
             logger.error(f"Erro HTTP ao consultar CEP {cep}: {e}")

@@ -1,6 +1,7 @@
-import pandas as pd
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
+
+import pandas as pd
 
 FORMATS = [
     '%Y%m%d',
@@ -10,7 +11,7 @@ FORMATS = [
     '%Y-%m'
 ]
 
-def parse_date(value: any) -> Optional[datetime]:
+def parse_date(value: Any) -> Optional[datetime]:
     """
     Tenta converter uma string ou valor em um objeto datetime baseado em múltiplos formatos.
     

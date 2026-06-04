@@ -1,9 +1,9 @@
 import re
+from typing import Any, Optional
+
 import pandas as pd
 
-from typing import Optional
-
-def format_cep(cep: any) -> Optional[str]:
+def format_cep(cep: Any) -> Optional[str]:
     """
     Formata um CEP para o padrão 99999-999.
 

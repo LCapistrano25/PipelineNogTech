@@ -1,7 +1,9 @@
 import logging
+import os
+
 import luigi
 import pandas as pd
-import os
+
 from config import settings
 
 logger = logging.getLogger(__name__)
@@ -22,7 +24,6 @@ class ExtractEngagementTask(luigi.Task):
             
             engagement_df = pd.read_json(str(self.input_path))
             
-            # Validação básica de dados
             if engagement_df.empty:
                 logger.warning(f"O arquivo {self.input_path} está vazio.")
             else:

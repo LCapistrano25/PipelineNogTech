@@ -1,12 +1,18 @@
 import logging
+import os
+from typing import Any, Dict, List
+
 import luigi
 import pandas as pd
-import os
-from typing import Dict, Any, List
+
 from config import settings
-from services.brasil_api_holiday_service import BrasilAPIHolidayService
-from infrastructure.holiday_cache import HolidayCache
-from pipelines.transform.enrich_transactions_address import EnrichTransactionsAddressTask
+from infrastructure.cache.holiday_cache import HolidayCache
+from infrastructure.services.holidays.brasil_api_holiday_service import (
+    BrasilAPIHolidayService,
+)
+from pipelines.transform.enrich_transactions_address import (
+    EnrichTransactionsAddressTask,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +46,7 @@ class EnrichTransactionsHolidayTask(luigi.Task):
             
             df['data_transacao'] = pd.to_datetime(df['data_transacao'])
             years = df['data_transacao'].dt.year.dropna().unique()
+            logger.info(f"Anos encontrados na coluna 'data_transacao': {years}")
             
             cache = HolidayCache(cache_file=settings.HOLIDAY_CACHE_PATH)
             holiday_service = BrasilAPIHolidayService(timeout=settings.API_TIMEOUT)
@@ -79,9 +86,9 @@ class EnrichTransactionsHolidayTask(luigi.Task):
                 holidays = holiday_dates_by_year.get(year_str, [])
                 return dt_str in holidays
 
-            df['eh_feriado'] = df.apply(check_is_holiday, axis=1)
+            df['venda_em_feriado'] = df.apply(check_is_holiday, axis=1)
             
-            logger.info(f"Enriquecimento de feriados concluído. {df['eh_feriado'].sum()} transações em feriados.")
+            logger.info(f"Enriquecimento de feriados concluído. {df['venda_em_feriado'].sum()} transações em feriados.")
 
             os.makedirs(os.path.dirname(str(self.output_path)), exist_ok=True)
             df.to_parquet(self.output().path, index=False)

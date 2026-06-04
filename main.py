@@ -1,7 +1,11 @@
 import logging
-import luigi
 import os
-from pipelines.transform.transform_engagement_transactions import TransformEnrichedDataTask
+
+import luigi
+
+from pipelines.transform.transform_engagement_transactions import (
+    TransformEnrichedDataTask,
+)
 
 def setup_logging():
     """

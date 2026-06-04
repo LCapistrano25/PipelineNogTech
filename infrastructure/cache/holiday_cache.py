@@ -1,11 +1,13 @@
-import os
 import json
 import logging
-from typing import Dict, Any, Optional
+import os
+from typing import Any, Dict, Optional
+
+from infrastructure.cache.icache import ICache
 
 logger = logging.getLogger(__name__)
 
-class HolidayCache:
+class HolidayCache(ICache):
     """
     Sistema de cache persistente para feriados consultados via ano.
     Evita chamadas desnecessárias à API e economiza recursos.

@@ -1,12 +1,14 @@
 import logging
+import os
+
 import luigi
 import pandas as pd
-import os
+
 from config import settings
-from infrastructure.utils.format_date import parse_date
-from infrastructure.utils.format_cpf import format_cpf
-from infrastructure.utils.format_float import format_float
 from infrastructure.utils.format_cep import format_cep
+from infrastructure.utils.format_cpf import format_cpf
+from infrastructure.utils.format_date import parse_date
+from infrastructure.utils.format_float import format_float
 from pipelines.extract.extract_transactions import ExtractTransactionsTask
 
 logger = logging.getLogger(__name__)

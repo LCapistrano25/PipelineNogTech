@@ -1,9 +1,13 @@
 import logging
+import os
+
 import luigi
 import pandas as pd
-import os
+
 from config import settings
-from pipelines.transform.enrich_transactions_holiday import EnrichTransactionsHolidayTask
+from pipelines.transform.enrich_transactions_holiday import (
+    EnrichTransactionsHolidayTask,
+)
 from pipelines.transform.transform_engagement import TransformEngagementTask
 
 logger = logging.getLogger(__name__)
@@ -28,6 +32,17 @@ class TransformEnrichedDataTask(luigi.Task):
             if transactions_df.empty:
                 logger.error("DataFrame de transações está vazio. O resultado final será parcial ou vazio.")
             
+            if engagement_df.empty:
+                logger.error("DataFrame de engajamento está vazio. O resultado final será parcial ou vazio.")
+            
+            if not 'cpf_aluno' in transactions_df.columns or not 'mes' in transactions_df.columns or not 'ano' in transactions_df.columns:
+                logger.error("Coluna 'cpf_aluno' não encontrada em DataFrame de transações. O resultado final será parcial ou vazio.")
+                return
+
+            if not 'cpf_aluno' in engagement_df.columns or not 'mes' in engagement_df.columns or not 'ano' in engagement_df.columns:
+                logger.error("Coluna 'cpf_aluno' não encontrada em DataFrame de engajamento. O resultado final será parcial ou vazio.")
+                return
+
             # Join dos dados
             final_df = pd.merge(
                 transactions_df, 
@@ -39,7 +54,6 @@ class TransformEnrichedDataTask(luigi.Task):
             # Validação pós-join
             if not final_df.empty:
                 logger.info(f"Join concluído. Dataset final com {len(final_df)} registros.")
-                # Verifica se houve correspondência de engajamento
                 matched_engagement = final_df['horas_assistidas'].notna().sum()
                 logger.info(f"Registros com dados de engajamento correspondentes: {matched_engagement}")
             else:

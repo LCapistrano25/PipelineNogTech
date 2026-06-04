@@ -1,6 +1,7 @@
 import unittest
-from infrastructure.utils.format_cpf import format_cpf
+
 from infrastructure.utils.format_cep import format_cep
+from infrastructure.utils.format_cpf import format_cpf
 
 class TestUtils(unittest.TestCase):
     """

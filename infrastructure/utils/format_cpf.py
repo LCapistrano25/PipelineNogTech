@@ -1,7 +1,7 @@
 import re
-from typing import Optional
+from typing import Any, Optional
 
-def format_cpf(cpf: any) -> Optional[str]:
+def format_cpf(cpf: Any) -> Optional[str]:
     """
     Formata o CPF para o padrão 000.000.000-00.
     

@@ -1,7 +1,9 @@
 import logging
+import os
+
 import luigi
 import pandas as pd
-import os
+
 from config import settings
 
 logger = logging.getLogger(__name__)

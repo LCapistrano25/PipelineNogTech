@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-class ResponseCep(BaseModel):
+class CepResponse(BaseModel):
     """
     Entidade que representa a resposta de consulta de CEP da BrasilAPI.
     """
