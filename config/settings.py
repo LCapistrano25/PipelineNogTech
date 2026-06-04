@@ -19,8 +19,10 @@ PROCESSED_ENGAGEMENT = os.path.join(OUTPUT_DIR, "processed", "engagement.parquet
 PROCESSED_TRANSACTIONS = os.path.join(OUTPUT_DIR, "processed", "transactions.parquet")
 ENRICHED_ADDRESS = os.path.join(OUTPUT_DIR, "processed", "transactions_enriched_address.parquet")
 ENRICHED_HOLIDAY = os.path.join(OUTPUT_DIR, "processed", "transactions_enriched_holiday.parquet")
+PROCESSED_ANONYMIZED = os.path.join(OUTPUT_DIR, "processed", "transactions_anonymized.parquet")
 
 FINAL_ENRICHED_DATA = os.path.join(OUTPUT_DIR, "transformed", "enriched_engagement_transactions.parquet")
+ANONYMIZED_TRANSACTIONS = os.path.join(OUTPUT_DIR, "final", "data_lake")
 
 # Caches
 CEP_CACHE_PATH = os.path.join(DATABASES_DIR, "cep_cache.json")

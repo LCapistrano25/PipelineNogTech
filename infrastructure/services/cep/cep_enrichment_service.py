@@ -16,7 +16,7 @@ class CepEnrichmentService:
     """
 
     def __init__(self, timeout: int = settings.API_TIMEOUT, cache_path: str = settings.CEP_CACHE_PATH):
-        self.api_service = BrasilAPICepService(timeout=timeout)
+        self.api_service = BrasilAPICepService(timeout=timeout, retries=settings.API_RETRIES)
         self.cache = AddressCache(cache_file=cache_path)
 
     def enrich_ceps(self, ceps: List[Any]) -> Dict[str, Dict[str, Any]]:

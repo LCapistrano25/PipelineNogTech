@@ -18,7 +18,7 @@ class HolidayEnrichmentService:
     """
 
     def __init__(self, timeout: int = settings.API_TIMEOUT, cache_path: str = settings.HOLIDAY_CACHE_PATH):
-        self.holiday_service = BrasilAPIHolidayService(timeout=timeout)
+        self.holiday_service = BrasilAPIHolidayService(timeout=timeout, retries=settings.API_RETRIES)
         self.cache = HolidayCache(cache_file=cache_path)
 
     def get_holidays_by_year(self, years: List[Any]) -> Dict[str, List[str]]:

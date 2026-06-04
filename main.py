@@ -4,9 +4,7 @@ import os
 import luigi
 
 from infrastructure.utils.file_utils import ensure_dir
-from pipelines.transform.transform_engagement_transactions import (
-    TransformEnrichedDataTask,
-)
+from pipelines.load.load_data_lake import LoadDataLakeTask
 
 def setup_logging():
     """
@@ -32,9 +30,10 @@ if __name__ == "__main__":
     logger.info("Iniciando a execução da Pipeline ETL NogTech")
     
     # Executa a task final que desencadeia as dependências
+    # O local_scheduler=False indica que deve tentar conectar ao central scheduler (Docker)
     luigi.build(
-        [TransformEnrichedDataTask()],
-        local_scheduler=True
+        [LoadDataLakeTask()],
+        local_scheduler=os.getenv('LUIGI_LOCAL_SCHEDULER', 'True') == 'True'
     )
     
     logger.info("Pipeline finalizada com sucesso!")

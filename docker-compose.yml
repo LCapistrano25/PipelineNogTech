@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  luigi-scheduler:
+    build: .
+    container_name: luigi_scheduler
+    command: uv run luigid
+    ports:
+      - "8082:8082"
+    volumes:
+      - .:/app
+    healthcheck:
+      test: ["CMD", "uv", "run", "python", "-c", "import requests; requests.get('http://localhost:8082')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  etl-pipeline:
+    build: .
+    container_name: etl_nogtech_pipeline
+    depends_on:
+      luigi-scheduler:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    environment:
+      - LUIGI_CONFIG_PATH=/app/luigi.cfg
+      - LUIGI_LOCAL_SCHEDULER=False
+    command: uv run python main.py

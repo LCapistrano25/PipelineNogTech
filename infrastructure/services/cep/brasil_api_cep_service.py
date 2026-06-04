@@ -2,6 +2,8 @@ import logging
 from typing import Optional
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from shared.responses.response_cep import CepResponse
 
@@ -14,8 +16,20 @@ class BrasilAPICepService:
     """
     BASE_URL = "https://brasilapi.com.br/api/cep/v2/"
 
-    def __init__(self, timeout: int = 10):
+    def __init__(self, timeout: int = 10, retries: int = 3):
         self.timeout = timeout
+        self.session = requests.Session()
+        
+        # Configuração de Retry automático (Requisito de Resiliência)
+        retry_strategy = Retry(
+            total=retries,
+            backoff_factor=1,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET"]
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("https://", adapter)
+        self.session.mount("http://", adapter)
 
     def get_cep(self, cep: str) -> Optional[CepResponse]:
         """
@@ -30,7 +44,7 @@ class BrasilAPICepService:
         url = f"{self.BASE_URL}{cep}"
         try:
             logger.info(f"Consultando CEP: {cep}")
-            response = requests.get(url, timeout=self.timeout)
+            response = self.session.get(url, timeout=self.timeout)
             
             response.raise_for_status()
             
