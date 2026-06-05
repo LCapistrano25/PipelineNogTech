@@ -2,7 +2,9 @@ import logging
 import os
 
 import luigi
+from decouple import config
 
+from config.settings import PIPELINE_LOCAL_SCHEDULER
 from infrastructure.utils.file_utils import ensure_dir
 from pipelines.load.load_data_lake import LoadDataLakeTask
 
@@ -14,8 +16,10 @@ def setup_logging():
     log_file = os.path.join(log_dir, "pipeline.log")
     ensure_dir(log_file)
     
+    log_level = config("LOG_LEVEL", default="INFO")
+    
     logging.basicConfig(
-        level=logging.INFO,
+        level=getattr(logging, log_level.upper(), logging.INFO),
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(log_file),
@@ -33,7 +37,7 @@ if __name__ == "__main__":
     # O local_scheduler=False indica que deve tentar conectar ao central scheduler (Docker)
     luigi.build(
         [LoadDataLakeTask()],
-        local_scheduler=os.getenv('LUIGI_LOCAL_SCHEDULER', 'True') == 'True'
+        local_scheduler=PIPELINE_LOCAL_SCHEDULER
     )
     
     logger.info("Pipeline finalizada com sucesso!")

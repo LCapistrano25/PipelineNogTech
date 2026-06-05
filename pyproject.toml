@@ -12,5 +12,6 @@ dependencies = [
     "pandas>=3.0.3",
     "pyarrow>=24.0.0",
     "pydantic>=2.13.4",
+    "python-decouple>=3.8",
     "requests>=2.34.2",
 ]

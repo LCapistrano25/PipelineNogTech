@@ -1,4 +1,5 @@
 import os
+from decouple import config
 
 # Raiz do projeto
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,11 +30,11 @@ CEP_CACHE_PATH = os.path.join(DATABASES_DIR, "cep_cache.json")
 HOLIDAY_CACHE_PATH = os.path.join(DATABASES_DIR, "holiday_cache.json")
 
 # Configurações da API
-BRASIL_API_CEP_URL = "https://brasilapi.com.br/api/cep/v2/"
-BRASIL_API_HOLIDAY_URL = "https://brasilapi.com.br/api/feriados/v1/"
-API_TIMEOUT = 15
-API_RETRIES = 3
+BRASIL_API_CEP_URL = config("BRASIL_API_CEP_URL", default="https://brasilapi.com.br/api/cep/v2/")
+BRASIL_API_HOLIDAY_URL = config("BRASIL_API_HOLIDAY_URL", default="https://brasilapi.com.br/api/feriados/v1/")
+API_TIMEOUT = config("API_TIMEOUT", default=15, cast=int)
+API_RETRIES = config("API_RETRIES", default=3, cast=int)
 
 # Configurações do Pipeline
-PIPELINE_WORKERS = 1
-PIPELINE_LOCAL_SCHEDULER = True
+PIPELINE_WORKERS = config("PIPELINE_WORKERS", default=1, cast=int)
+PIPELINE_LOCAL_SCHEDULER = config("LUIGI_LOCAL_SCHEDULER", default=True, cast=bool)

@@ -1,19 +1,21 @@
-version: '3.8'
-
 services:
   luigi-scheduler:
     build: .
     container_name: luigi_scheduler
-    command: uv run luigid
+    command: uv run luigid --address 0.0.0.0
     ports:
       - "8082:8082"
     volumes:
       - .:/app
+      - /app/.venv  # Volume anônimo para proteger o venv do container contra o mount do host
+    environment:
+      - UV_LINK_MODE=copy
     healthcheck:
-      test: ["CMD", "uv", "run", "python", "-c", "import requests; requests.get('http://localhost:8082')"]
-      interval: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:8082"]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 15s
 
   etl-pipeline:
     build: .
@@ -23,7 +25,9 @@ services:
         condition: service_healthy
     volumes:
       - .:/app
+      - /app/.venv  # Volume anônimo para proteger o venv do container
     environment:
       - LUIGI_CONFIG_PATH=/app/luigi.cfg
       - LUIGI_LOCAL_SCHEDULER=False
+      - UV_LINK_MODE=copy
     command: uv run python main.py

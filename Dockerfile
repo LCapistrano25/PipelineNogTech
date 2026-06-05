@@ -7,8 +7,14 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Instala dependências do sistema necessárias para algumas libs Python
+# Configura o uv para não tentar usar hardlinks (melhora compatibilidade com volumes Docker)
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Instala dependências do sistema necessárias
 RUN apt-get update && apt-get install -y \
+    curl \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 

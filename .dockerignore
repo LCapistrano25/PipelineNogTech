@@ -1,0 +1,11 @@
+.venv
+.uv
+__pycache__
+*.pyc
+.ipynb_checkpoints
+databases/cep_cache.json
+databases/holiday_cache.json
+logs/
+output/
+.git
+.gitignore
