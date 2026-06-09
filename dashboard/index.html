@@ -97,7 +97,13 @@
     .empty code { background:#0008; padding:3px 8px; border-radius:6px; color:#cdd5e6; }
     footer { color: var(--muted); font-size: 12px; margin-top: 30px; text-align: center; }
     .pill { display:inline-block; padding:3px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); }
-    .tooltip-title { color: "#fff"; fontSize: 13; fontWeight: 700; }
+    /* Tooltip do Recharts: garante texto legivel no tema escuro */
+    .recharts-default-tooltip { color: #e7ecf5 !important; }
+    .recharts-tooltip-label { color: #e7ecf5 !important; font-weight: 700; margin-bottom: 4px !important; }
+    .recharts-tooltip-item,
+    .recharts-tooltip-item-name,
+    .recharts-tooltip-item-value,
+    .recharts-tooltip-item-separator { color: #cdd5e6 !important; }
   </style>
 </head>
 <body>
@@ -119,7 +125,7 @@
     const fmtInt = (v) => new Intl.NumberFormat("pt-BR").format(v || 0);
     const orDash = (v) => (v === null || v === undefined ? "—" : v);
 
-    const tooltipStyle = { background: "#11141f", border: "1px solid #2a3150", borderRadius: 10, fontSize: 13 };
+    const tooltipStyle = { background: "#11141f", border: "1px solid #2a3150", borderRadius: 10, fontSize: 13, color: "#e7ecf5" };
 
     function KpiCard({ label, value, hint, color, alert }) {
       return (
