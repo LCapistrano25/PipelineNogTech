@@ -1,0 +1,143 @@
+2026-06-09 17:19:08,220 - main - INFO - Iniciando a execução da Pipeline ETL NogTech
+2026-06-09 17:19:08,221 - luigi - INFO - logging configured by default settings
+2026-06-09 17:19:08,230 - luigi-interface - DEBUG - Checking if LoadDataLakeTask(output_path=/app/output/final/data_lake) is complete
+2026-06-09 17:19:08,231 - luigi-interface - DEBUG - Checking if TransactionAnonymizationTask(output_path=/app/output/processed/transactions_anonymized.parquet) is complete
+2026-06-09 17:19:08,236 - luigi-interface - INFO - Informed scheduler that task   LoadDataLakeTask__app_output_fina_1f850cfe22   has status   PENDING
+2026-06-09 17:19:08,236 - luigi-interface - DEBUG - Checking if TransformEnrichedDataTask(output_path=/app/output/transformed/enriched_engagement_transactions.parquet) is complete
+2026-06-09 17:19:08,237 - luigi-interface - INFO - Informed scheduler that task   TransactionAnonymizationTask__app_output_proc_f55543db73   has status   PENDING
+2026-06-09 17:19:08,237 - luigi-interface - DEBUG - Checking if EnrichTransactionsHolidayTask(input_path=/app/output/processed/transactions_enriched_address.parquet, output_path=/app/output/processed/transactions_enriched_holiday.parquet) is complete
+2026-06-09 17:19:08,238 - luigi-interface - DEBUG - Checking if TransformEngagementTask(output_path=/app/output/processed/engagement.parquet) is complete
+2026-06-09 17:19:08,238 - luigi-interface - INFO - Informed scheduler that task   TransformEnrichedDataTask__app_output_tran_b6a213e0b6   has status   PENDING
+2026-06-09 17:19:08,239 - luigi-interface - DEBUG - Checking if ExtractEngagementTask(input_path=/app/databases/engajamento_alunos.json, output_path=/app/output/loaded/engagement_students.parquet) is complete
+2026-06-09 17:19:08,240 - luigi-interface - INFO - Informed scheduler that task   TransformEngagementTask__app_output_proc_8f90417b8a   has status   PENDING
+2026-06-09 17:19:08,240 - luigi-interface - INFO - Informed scheduler that task   ExtractEngagementTask__app_databases_e__app_output_load_fdf4bc326c   has status   PENDING
+2026-06-09 17:19:08,241 - luigi-interface - DEBUG - Checking if EnrichTransactionsAddressTask(output_path=/app/output/processed/transactions_enriched_address.parquet) is complete
+2026-06-09 17:19:08,241 - luigi-interface - INFO - Informed scheduler that task   EnrichTransactionsHolidayTask__app_output_proc__app_output_proc_fbd78cdb20   has status   PENDING
+2026-06-09 17:19:08,242 - luigi-interface - DEBUG - Checking if TransformTransactionsTask(output_path=/app/output/processed/transactions.parquet) is complete
+2026-06-09 17:19:08,242 - luigi-interface - INFO - Informed scheduler that task   EnrichTransactionsAddressTask__app_output_proc_f7b3ee8112   has status   PENDING
+2026-06-09 17:19:08,243 - luigi-interface - DEBUG - Checking if ExtractTransactionsTask(input_path=/app/databases/transacoes_nogtech.csv, output_path=/app/output/loaded/transactions_nogtech.parquet) is complete
+2026-06-09 17:19:08,243 - luigi-interface - INFO - Informed scheduler that task   TransformTransactionsTask__app_output_proc_54e25657fb   has status   PENDING
+2026-06-09 17:19:08,244 - luigi-interface - INFO - Informed scheduler that task   ExtractTransactionsTask__app_databases_t__app_output_load_8d23ee5339   has status   PENDING
+2026-06-09 17:19:08,244 - luigi-interface - INFO - Done scheduling tasks
+2026-06-09 17:19:08,244 - luigi-interface - INFO - Running Worker with 1 processes
+2026-06-09 17:19:08,245 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:08,245 - luigi-interface - DEBUG - Pending tasks: 9
+2026-06-09 17:19:08,246 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   ExtractEngagementTask(input_path=/app/databases/engajamento_alunos.json, output_path=/app/output/loaded/engagement_students.parquet)
+2026-06-09 17:19:08,246 - pipelines.extract.extract_engagement - INFO - Iniciando extração de engajamento de /app/databases/engajamento_alunos.json
+2026-06-09 17:19:08,269 - pipelines.extract.extract_engagement - INFO - Extraídos 17079 registros.
+2026-06-09 17:19:08,278 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/loaded/engagement_students.parquet
+2026-06-09 17:19:08,278 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      ExtractEngagementTask(input_path=/app/databases/engajamento_alunos.json, output_path=/app/output/loaded/engagement_students.parquet)
+2026-06-09 17:19:08,278 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:08,279 - luigi-interface - INFO - Informed scheduler that task   ExtractEngagementTask__app_databases_e__app_output_load_fdf4bc326c   has status   DONE
+2026-06-09 17:19:08,280 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:08,280 - luigi-interface - DEBUG - Pending tasks: 8
+2026-06-09 17:19:08,280 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   TransformEngagementTask(output_path=/app/output/processed/engagement.parquet)
+2026-06-09 17:19:08,281 - pipelines.transform.transform_engagement - INFO - Iniciando transformação de engajamento
+2026-06-09 17:19:08,309 - pipelines.transform.transform_engagement - INFO - Transformados 17079 registros de engajamento.
+2026-06-09 17:19:08,314 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/processed/engagement.parquet
+2026-06-09 17:19:08,314 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      TransformEngagementTask(output_path=/app/output/processed/engagement.parquet)
+2026-06-09 17:19:08,314 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:08,315 - luigi-interface - INFO - Informed scheduler that task   TransformEngagementTask__app_output_proc_8f90417b8a   has status   DONE
+2026-06-09 17:19:08,315 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:08,316 - luigi-interface - DEBUG - Pending tasks: 7
+2026-06-09 17:19:08,316 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   ExtractTransactionsTask(input_path=/app/databases/transacoes_nogtech.csv, output_path=/app/output/loaded/transactions_nogtech.parquet)
+2026-06-09 17:19:08,316 - pipelines.extract.extract_transactions - INFO - Iniciando extração de transações de /app/databases/transacoes_nogtech.csv
+2026-06-09 17:19:08,321 - pipelines.extract.extract_transactions - INFO - Extraídas 4172 transações.
+2026-06-09 17:19:08,324 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/loaded/transactions_nogtech.parquet
+2026-06-09 17:19:08,324 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      ExtractTransactionsTask(input_path=/app/databases/transacoes_nogtech.csv, output_path=/app/output/loaded/transactions_nogtech.parquet)
+2026-06-09 17:19:08,325 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:08,325 - luigi-interface - INFO - Informed scheduler that task   ExtractTransactionsTask__app_databases_t__app_output_load_8d23ee5339   has status   DONE
+2026-06-09 17:19:08,325 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:08,326 - luigi-interface - DEBUG - Pending tasks: 6
+2026-06-09 17:19:08,326 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   TransformTransactionsTask(output_path=/app/output/processed/transactions.parquet)
+2026-06-09 17:19:08,326 - pipelines.transform.transform_transactions - INFO - Iniciando transformação de transações
+2026-06-09 17:19:08,354 - pipelines.transform.transform_transactions - INFO - Transformadas 4172 transações.
+2026-06-09 17:19:08,358 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/processed/transactions.parquet
+2026-06-09 17:19:08,358 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      TransformTransactionsTask(output_path=/app/output/processed/transactions.parquet)
+2026-06-09 17:19:08,358 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:08,359 - luigi-interface - INFO - Informed scheduler that task   TransformTransactionsTask__app_output_proc_54e25657fb   has status   DONE
+2026-06-09 17:19:08,360 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:08,360 - luigi-interface - DEBUG - Pending tasks: 5
+2026-06-09 17:19:08,360 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   EnrichTransactionsAddressTask(output_path=/app/output/processed/transactions_enriched_address.parquet)
+2026-06-09 17:19:08,361 - pipelines.transform.enrich_transactions_address - INFO - Iniciando enriquecimento de endereço com estratégia de Cache
+2026-06-09 17:19:08,363 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 50010-000
+2026-06-09 17:19:12,201 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 10010-000
+2026-06-09 17:19:17,839 - infrastructure.services.cep.brasil_api_cep_service - ERROR - Erro HTTP ao consultar CEP 10010-000: 404 Client Error: Not Found for url: https://brasilapi.com.br/api/cep/v2/10010-000
+2026-06-09 17:19:17,840 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 80010-010
+2026-06-09 17:19:20,425 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 90010-150
+2026-06-09 17:19:35,446 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ReadTimeoutError("HTTPSConnectionPool(host='brasilapi.com.br', port=443): Read timed out. (read timeout=15)")': /api/cep/v2/90010-150
+2026-06-09 17:19:35,856 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 20031-050
+2026-06-09 17:19:38,746 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 45381-330
+2026-06-09 17:19:39,961 - infrastructure.services.cep.brasil_api_cep_service - ERROR - Erro HTTP ao consultar CEP 45381-330: 404 Client Error: Not Found for url: https://brasilapi.com.br/api/cep/v2/45381-330
+2026-06-09 17:19:39,962 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 69010-000
+2026-06-09 17:19:44,229 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 70040-010
+2026-06-09 17:19:47,429 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 30140-071
+2026-06-09 17:19:51,948 - infrastructure.services.cep.brasil_api_cep_service - ERROR - Erro HTTP ao consultar CEP 30140-071: 404 Client Error: Not Found for url: https://brasilapi.com.br/api/cep/v2/30140-071
+2026-06-09 17:19:51,949 - infrastructure.services.cep.brasil_api_cep_service - INFO - Consultando CEP: 60060-440
+2026-06-09 17:19:56,919 - infrastructure.services.cep.cep_enrichment_service - INFO - Enriquecimento de CEP concluído. Cache Hits: 0, Novas Consultas: 7
+2026-06-09 17:19:56,945 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/processed/transactions_enriched_address.parquet
+2026-06-09 17:19:56,945 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      EnrichTransactionsAddressTask(output_path=/app/output/processed/transactions_enriched_address.parquet)
+2026-06-09 17:19:56,945 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:56,948 - luigi-interface - INFO - Informed scheduler that task   EnrichTransactionsAddressTask__app_output_proc_f7b3ee8112   has status   DONE
+2026-06-09 17:19:56,948 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:56,950 - luigi-interface - DEBUG - Pending tasks: 4
+2026-06-09 17:19:56,951 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   EnrichTransactionsHolidayTask(input_path=/app/output/processed/transactions_enriched_address.parquet, output_path=/app/output/processed/transactions_enriched_holiday.parquet)
+2026-06-09 17:19:56,951 - pipelines.transform.enrich_transactions_holiday - INFO - Iniciando enriquecimento de feriados com estratégia de Cache
+2026-06-09 17:19:56,961 - infrastructure.services.holidays.holiday_enrichment_service - INFO - Consultando feriados para o ano 2024
+2026-06-09 17:19:56,961 - infrastructure.services.holidays.brasil_api_holiday_service - INFO - Consultando ano: 2024
+2026-06-09 17:19:57,273 - infrastructure.services.holidays.holiday_enrichment_service - INFO - Enriquecimento de feriados concluído. 155 transações em feriados.
+2026-06-09 17:19:57,280 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/processed/transactions_enriched_holiday.parquet
+2026-06-09 17:19:57,280 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      EnrichTransactionsHolidayTask(input_path=/app/output/processed/transactions_enriched_address.parquet, output_path=/app/output/processed/transactions_enriched_holiday.parquet)
+2026-06-09 17:19:57,280 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:57,282 - luigi-interface - INFO - Informed scheduler that task   EnrichTransactionsHolidayTask__app_output_proc__app_output_proc_fbd78cdb20   has status   DONE
+2026-06-09 17:19:57,282 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:57,283 - luigi-interface - DEBUG - Pending tasks: 3
+2026-06-09 17:19:57,283 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   TransformEnrichedDataTask(output_path=/app/output/transformed/enriched_engagement_transactions.parquet)
+2026-06-09 17:19:57,283 - pipelines.transform.transform_engagement_transactions - INFO - Iniciando join final de transações e engajamento
+2026-06-09 17:19:57,292 - pipelines.transform.transform_engagement_transactions - INFO - Join concluído. Dataset final com 4172 registros.
+2026-06-09 17:19:57,292 - pipelines.transform.transform_engagement_transactions - INFO - Registros com dados de engajamento correspondentes: 1747
+2026-06-09 17:19:57,298 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/transformed/enriched_engagement_transactions.parquet
+2026-06-09 17:19:57,298 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      TransformEnrichedDataTask(output_path=/app/output/transformed/enriched_engagement_transactions.parquet)
+2026-06-09 17:19:57,298 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:57,299 - luigi-interface - INFO - Informed scheduler that task   TransformEnrichedDataTask__app_output_tran_b6a213e0b6   has status   DONE
+2026-06-09 17:19:57,299 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:57,300 - luigi-interface - DEBUG - Pending tasks: 2
+2026-06-09 17:19:57,300 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   TransactionAnonymizationTask(output_path=/app/output/processed/transactions_anonymized.parquet)
+2026-06-09 17:19:57,300 - pipelines.transform.transaction_anonymization - INFO - Iniciando anonimização de dados (LGPD)
+2026-06-09 17:19:57,303 - infrastructure.utils.anonymization_utils - INFO - CPF anonimizado com sucesso.
+2026-06-09 17:19:57,304 - infrastructure.utils.anonymization_utils - INFO - Coluna 'nome_aluno' removida para conformidade com LGPD.
+2026-06-09 17:19:57,309 - infrastructure.utils.file_utils - INFO - Dados salvos com sucesso em: /app/output/processed/transactions_anonymized.parquet
+2026-06-09 17:19:57,309 - pipelines.transform.transaction_anonymization - INFO - Dados anonimizados salvos em /app/output/processed/transactions_anonymized.parquet
+2026-06-09 17:19:57,309 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      TransactionAnonymizationTask(output_path=/app/output/processed/transactions_anonymized.parquet)
+2026-06-09 17:19:57,309 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:57,310 - luigi-interface - INFO - Informed scheduler that task   TransactionAnonymizationTask__app_output_proc_f55543db73   has status   DONE
+2026-06-09 17:19:57,310 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:57,311 - luigi-interface - DEBUG - Pending tasks: 1
+2026-06-09 17:19:57,311 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) running   LoadDataLakeTask(output_path=/app/output/final/data_lake)
+2026-06-09 17:19:57,311 - pipelines.load.load_data_lake - INFO - Iniciando a carga final no Data Lake
+2026-06-09 17:19:57,329 - infrastructure.utils.file_utils - INFO - Dados salvos com particionamento ['ano', 'mes'] em: /app/output/final/data_lake
+2026-06-09 17:19:57,329 - pipelines.load.load_data_lake - INFO - Carga final concluída com sucesso em /app/output/final/data_lake
+2026-06-09 17:19:57,329 - luigi-interface - INFO - [pid 40] Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) done      LoadDataLakeTask(output_path=/app/output/final/data_lake)
+2026-06-09 17:19:57,329 - luigi-interface - DEBUG - 1 running tasks, waiting for next task to finish
+2026-06-09 17:19:57,330 - luigi-interface - INFO - Informed scheduler that task   LoadDataLakeTask__app_output_fina_1f850cfe22   has status   DONE
+2026-06-09 17:19:57,330 - luigi-interface - DEBUG - Asking scheduler for work...
+2026-06-09 17:19:57,331 - luigi-interface - DEBUG - Done
+2026-06-09 17:19:57,331 - luigi-interface - DEBUG - There are no more tasks to run at this time
+2026-06-09 17:19:57,331 - luigi-interface - INFO - Worker Worker(salt=1749555795, workers=1, host=b74ce20040fd, username=root, pid=40) was stopped. Shutting down Keep-Alive thread
+2026-06-09 17:19:57,332 - luigi-interface - INFO - 
+===== Luigi Execution Summary =====
+
+Scheduled 9 tasks of which:
+* 9 ran successfully:
+    - 1 EnrichTransactionsAddressTask(output_path=/app/output/processed/transactions_enriched_address.parquet)
+    - 1 EnrichTransactionsHolidayTask(input_path=/app/output/processed/transactions_enriched_address.parquet, output_path=/app/output/processed/transactions_enriched_holiday.parquet)
+    - 1 ExtractEngagementTask(input_path=/app/databases/engajamento_alunos.json, output_path=/app/output/loaded/engagement_students.parquet)
+    - 1 ExtractTransactionsTask(input_path=/app/databases/transacoes_nogtech.csv, output_path=/app/output/loaded/transactions_nogtech.parquet)
+    - 1 LoadDataLakeTask(output_path=/app/output/final/data_lake)
+    ...
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+2026-06-09 17:19:57,332 - main - INFO - Pipeline finalizada com sucesso!

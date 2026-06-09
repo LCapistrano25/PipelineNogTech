@@ -1,0 +1,37 @@
+{
+    "50010-000": {
+        "bairro": "Santo Antônio",
+        "cidade": "Recife",
+        "estado": "PE"
+    },
+    "80010-010": {
+        "bairro": "Centro",
+        "cidade": "Curitiba",
+        "estado": "PR"
+    },
+    "90010-150": {
+        "bairro": "Centro Histórico",
+        "cidade": "Porto Alegre",
+        "estado": "RS"
+    },
+    "20031-050": {
+        "bairro": "Centro",
+        "cidade": "Rio de Janeiro",
+        "estado": "RJ"
+    },
+    "69010-000": {
+        "bairro": "Centro",
+        "cidade": "Manaus",
+        "estado": "AM"
+    },
+    "70040-010": {
+        "bairro": "Asa Norte",
+        "cidade": "Brasília",
+        "estado": "DF"
+    },
+    "60060-440": {
+        "bairro": "Praia de Iracema",
+        "cidade": "Fortaleza",
+        "estado": "CE"
+    }
+}

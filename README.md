@@ -2,6 +2,8 @@
 
 Pipeline ETL para consolidar dados de transacoes e engajamento da NogTech. O fluxo usa Python, Luigi e Docker para extrair arquivos locais, enriquecer informacoes com a BrasilAPI, anonimizar dados sensiveis e gravar o resultado final em Parquet.
 
+> **Documentacao detalhada:** para o passo a passo de como o Luigi orquestra cada etapa (construcao do DAG, idempotencia, scheduler e resiliencia), veja [documents/FLUXO_LUIGI.md](documents/FLUXO_LUIGI.md). Para visualizar o resultado final, veja o [Dashboard de BI](#dashboard-de-bi).
+
 ## Inicializacao do ambiente
 
 Para subir o ambiente pela primeira vez, ou reconstruir a imagem:
@@ -41,6 +43,24 @@ Durante a execucao, o pipeline grava arquivos intermediarios e finais nas seguin
 - `output/transformed`: base consolidada antes da carga final.
 - `output/final/data_lake`: destino final em Parquet particionado.
 - `logs/pipeline.log`: log da execucao.
+
+## Dashboard de BI
+
+A pasta [dashboard/](dashboard/) contem uma pagina de Business Intelligence (React + Recharts, sem build) que apresenta a saida final do pipeline: receita, geografia, calendario (feriados) e engajamento dos alunos.
+
+O dashboard le os dados agregados de `dashboard/data.js`, gerado a partir do Data Lake. Apos executar o pipeline:
+
+```bash
+# 1. Gera os dados agregados a partir de output/final/data_lake
+uv run python -m dashboard.generate_dashboard_data
+# ou via Docker:
+docker compose run --rm --no-deps etl-pipeline uv run python -m dashboard.generate_dashboard_data
+
+# 2. Serve a pasta (servidor estatico evita bloqueio de CORS ao carregar data.js)
+python -m http.server -d dashboard 8000
+```
+
+Acesse **http://localhost:8000**. Detalhes em [dashboard/README.md](dashboard/README.md).
 
 ## Idempotencia e tratamento de falhas
 
