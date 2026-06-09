@@ -31,3 +31,21 @@ services:
       - LUIGI_LOCAL_SCHEDULER=False
       - UV_LINK_MODE=copy
     command: uv run python main.py
+
+  dashboard:
+    build: .
+    container_name: nogtech_dashboard
+    depends_on:
+      etl-pipeline:
+        condition: service_completed_successfully  # so' sobe apos o pipeline terminar com sucesso
+    volumes:
+      - .:/app
+      - /app/.venv  # Volume anônimo para proteger o venv do container
+    environment:
+      - UV_LINK_MODE=copy
+    ports:
+      - "8000:8000"
+    # 1) Gera o data.js a partir do Data Lake; 2) serve a pasta dashboard/
+    command: >
+      sh -c "uv run python -m dashboard.generate_dashboard_data &&
+             uv run python -m http.server 8000 --bind 0.0.0.0 --directory dashboard"
