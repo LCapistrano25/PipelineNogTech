@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NogTech · Dashboard de BI</title>
 
-  <!-- Bibliotecas via CDN (UMD): React, Recharts e Babel para JSX em runtime -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
+  <!-- Bibliotecas via CDN (UMD): React, Recharts e Babel para JSX em runtime.
+       Versões FIXAS de propósito: o Babel 8 deixou de aplicar o preset React
+       automaticamente em <script type="text/babel"> e passou a usar o runtime
+       "automatic" (gera import de "react/jsx-runtime", que quebra sem bundler).
+       Mantemos o Babel 7.x (runtime "classic" -> React.createElement) e fixamos
+       todas as dependências para que uma release upstream não derrube o dashboard. -->
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
   <script crossorigin src="https://unpkg.com/recharts@2.15.4/umd/Recharts.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.7/babel.min.js"></script>
 
   <!-- Dados agregados gerados por generate_dashboard_data.py (define window.__DASHBOARD_DATA__) -->
   <script src="data.js"></script>
@@ -109,7 +114,7 @@
 <body>
   <div id="root"></div>
 
-  <script type="text/babel">
+  <script type="text/babel" data-presets="react">
     const { useMemo } = React;
     const {
       ResponsiveContainer, ComposedChart, BarChart, Bar, LineChart, Line, PieChart, Pie,

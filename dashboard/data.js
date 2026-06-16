@@ -1,6 +1,6 @@
 // Gerado automaticamente por dashboard/generate_dashboard_data.py — não editar à mão.
 window.__DASHBOARD_DATA__ = {
-  "generatedAt": "2026-06-09T19:36:56.644189+00:00",
+  "generatedAt": "2026-06-16T22:30:20.200989+00:00",
   "kpis": {
     "totalTransacoes": 4172,
     "receitaTotal": 826805.0,
